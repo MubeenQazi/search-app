@@ -10,15 +10,18 @@ function App() {
   const [reports, setReports] = useState(data.reports);
 
   useEffect(() => {
-    if (search) {
+    if (search && search[0].length > 0) {
       const fuse = new Fuse(data.reports, {
         keys: ["name", "category", "keywords"],
         threshold: 0.4,
         includeScore: true,
       });
       setReports(fuse.search(search[0]));
+    } else {
+      setReports(data.reports);
     }
   }, [search]);
+
   return (
     <div className="App">
       <input
@@ -27,8 +30,7 @@ function App() {
       />
 
       {reports?.map((data) => {
-        const report = search.length > 0 ? data?.item : data;
-
+        const report = search && search[0].length > 0 ? data?.item : data;
         return (
           <div key={report?.id}>
             <h2>{report?.category}</h2>
